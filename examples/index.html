@@ -38,9 +38,10 @@ html, body, #map {
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
         crossorigin=""></script>
     
-    <script src="../src/leaflet.slidebar.js"></script>
+    <!-- <script src="../src/leaflet.slidebar.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chance@1.1.12/chance.min.js"></script>
-    <script>
+    <script type="module">
+        import { Slidebar } from '../src/leaflet.slidebar.js';
 
         const center = chance.coordinates({fixed: 2})
             .split(',')

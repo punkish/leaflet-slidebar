@@ -204,3 +204,5 @@ const Slidebar = L.Control.extend({
         return this;
     },
 });
+
+export { Slidebar }
