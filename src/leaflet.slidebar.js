@@ -107,9 +107,9 @@ const Slidebar = L.Control.extend({
     reCenter: function(coords) {
         const centerPx = this._map.latLngToLayerPoint(coords);
         const newCenterPx = [];
+        const { min, max } = this._map.getPixelBounds();
 
         if (document.body.clientWidth < 400) {
-            const { min, max } = this._map.getPixelBounds();
             const y = max.y - min.y;
             let delta = 0;
             
@@ -126,15 +126,11 @@ const Slidebar = L.Control.extend({
             newCenterPx.push(centerPx.x, centerPx.y + (delta * y));
         }
         else {
-            const { min, max } = this._map.getPixelBounds();
-            const x = max.x - min.x;
-            let delta = ((x - 350) / 2) - 40;
-            newCenterPx.push(centerPx.x + delta, centerPx.y);
+            newCenterPx.push(centerPx.x, centerPx.y);
         }
 
         const newCenter = this._map.layerPointToLatLng(newCenterPx);
         this._map.flyTo(newCenter);
-        
     },
 
     update: async function({ content, coords }) {
@@ -150,8 +146,8 @@ const Slidebar = L.Control.extend({
 
         const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
         buttons.forEach((button) => {
-            button.dataset.lat = coords[0];
-            button.dataset.lng = coords[1];
+            button.dataset.lat = coords.lat;
+            button.dataset.lng = coords.lng;
         });
 
         return this;
@@ -171,6 +167,10 @@ const Slidebar = L.Control.extend({
         L.DomUtil.addClass(this._container, 'leaflet-slidebar');
         L.DomUtil.addClass(this._container, 'open');
 
+        
+        // const sb = document.querySelector('#leaflet-slidebar');
+        // sb.style.setProperty('--slidebar-height', document.body.clientHeight);
+
         if (L.Browser.touch) {
             L.DomUtil.addClass(this._container, 'leaflet-touch');
         }
@@ -187,7 +187,6 @@ const Slidebar = L.Control.extend({
         // insert as first child of map container (important for css)
         map._container.insertBefore(this._container, map._container.firstChild);
 
-        
         const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
         const that = this;
         buttons.forEach((button) => {

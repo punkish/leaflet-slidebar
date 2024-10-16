@@ -36,11 +36,8 @@
 #leaflet-slidebar nav ul.right {
     float: right;
     padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 3px;
-}
-#leaflet-slidebar nav ul.right li {
-    padding-left: 5px;
+    padding-bottom: 3px;
+    margin: 0;
 }
 #leaflet-slidebar nav::after {
     content: "";
@@ -89,54 +86,20 @@ div.img {
         height: auto !important;
         max-height: 500px;
         top: 20px;
+        bottom: unset;
         left: unset;
         right: 20px;
         border-radius: 20px;
         transition: width 0.5s ease-in;
         padding: 0;
     }
-    #leaflet-slidebar.closed {
-        width: 0px;
-        padding: 0;
-    }
-    #leaflet-slidebar.quarter {
-        width: calc(var(--slidebar-width) * 0.25);
-    }
-    #leaflet-slidebar.half {
-        width: calc(var(--slidebar-width) * 0.5);
-    }
-    #leaflet-slidebar.full {
-        width: var(--slidebar-width);
-    }
     #leaflet-slidebar nav {
-/*         width: 45px; */
-/*         float: right; */
-/*         border: 1px solid;
-        padding: 0;
-        margin: 0 auto; */
-        display: none;
-    }
-    #leaflet-slidebar nav ul.right {
-        padding-right: 5px;
-        padding-top: 0px;
-/*         direction: rtl; */
-    }
-    #leaflet-slidebar nav ul.right li {
-        padding-bottom: 0px;
-    }
-    #leaflet-slidebar nav ul.right li:nth-child(-n+3) {
         display: none;
     }
     #leaflet-slidebar main {
-/*         float: left; */
-/*         border-top: none; */
-/*         border-right: 1px solid gray; */
-/*         border: 1px solid; */
-        /*! width: 100%; */
-/*         max-width: 274px; */
-        border: none;
-        max-height: 500px;
+        width: 100%;
+        max-height: 480px;
         overflow-y: auto;
-        padding: 20px;
+        border: none;
     }
 }
