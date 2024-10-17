@@ -43,6 +43,12 @@ html, body, #map {
     <script type="module">
         import { Slidebar } from '../src/leaflet.slidebar.js';
 
+        // create the sidebar instance and add it to the map
+        const slidebar = new Slidebar({
+            //content: '<i>Click on a marker for more info</i>',
+            state: 'closed'
+        });
+
         const center = chance.coordinates({fixed: 2})
             .split(',')
             .map(c => c.trim() && Number(c));
@@ -98,21 +104,23 @@ html, body, #map {
                 fixed: 2
             });
 
-            const coords = [lat, lng];
+            const latlng = new L.LatLng(lat, lng);
+
             const title = chance.sentence({ words: 5 });
             const desc = chance.sentence({ words: 15 });
-            const content = `<h3>${title}</h3>
-                <figure>
-                    <div class="img">img</div>
-                    <figcaption><p>${desc}</p></figcaption>
-                </figure>`;
+            const content = `
+            <h3>${title}</h3>
+            <figure>
+                <div class="img">img</div>
+                <figcaption><p>${desc}</p></figcaption>
+            </figure>`;
 
-            const marker = L.marker(coords, markerOptions.default).addTo(map);
+            const marker = L.marker(latlng, markerOptions.default).addTo(map);
             marker.on('click', function(e) {
                 const thisMarker = e.target;
                 thisMarker.setIcon(markerOptions.active.icon);
                 const lastClicked = clickedMarkers[ clickedMarkers.length - 1 ];
-                slidebar.update({ content, coords });
+                slidebar.update({ content, latlng });
                 clickedMarkers.push(thisMarker);
 
                 if (lastClicked) {
@@ -120,12 +128,6 @@ html, body, #map {
                 }
             });
         }
-
-        // create the sidebar instance and add it to the map
-        const slidebar = new Slidebar({
-            //content: '<i>Click on a marker for more info</i>',
-            state: 'closed'
-        });
 
         slidebar.addTo(map);        
     </script>
