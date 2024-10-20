@@ -16,41 +16,57 @@ const Slidebar = L.Control.extend({
         L.Util.setOptions(this, options);
         
         this.on('swipeup', function(evt) {
+            let targetSize;
+
             if (evt.value > this.options.doubleThreshold) {
-                this.toggleSize('full');
+                //this.toggleSize('full');
+                targetSize = 'full';
             } 
             else {
                 switch (this._size) {
                     case 'closed':
-                        this.toggleSize('quarter');
+                        //this.toggleSize('quarter');
+                        targetSize = 'quarter';
                         break;
                     case 'quarter':
-                        this.toggleSize('half');
+                        //this.toggleSize('half');
+                        targetSize = 'half';
                         break;
                     case 'half':
-                        this.toggleSize('full');
+                        //this.toggleSize('full');
+                        targetSize = 'full';
                         break;
                 }
             }
+
+            this.toggleSize(targetSize);
         });
 
         this.on('swipedown', function(evt) {
+            let targetSize;
+
             if (evt.value > this.options.doubleThreshold) {
-                this.toggleSize('closed');
+                //this.toggleSize('closed');
+                targetSize = 'closed';
             } 
             else {
                 switch (this._size) {
                     case 'full':
-                        this.toggleSize('half');
+                        //this.toggleSize('half');
+                        targetSize = 'half';
                         break;
                     case 'half':
-                        this.toggleSize('quarter');
+                        //this.toggleSize('quarter');
+                        targetSize = 'quarter';
                         break;
                     case 'quarter':
-                        this.toggleSize('closed');
+                        //this.toggleSize('closed');
+                        targetSize = 'closed';
                         break;
                 }
             }
+
+            this.toggleSize(targetSize);
         });
 
         return this;
@@ -62,7 +78,7 @@ const Slidebar = L.Control.extend({
         sizes.forEach(s => el.classList.remove(s));
         el.classList.add(targetSize);
         this._size = targetSize;
-
+        
         // Create the event
         //const event = new CustomEvent("sizeToggled", { "detail": "Info window size was toggled" });
 
@@ -80,17 +96,24 @@ const Slidebar = L.Control.extend({
             this._div.classList.add(this.options.state);
             this._div.id = 'leaflet-slidebar';
             this._size = this.options.state;
-            this._div.innerHTML = `
-                <nav>
-                    <ul class="right">
-                        <li><button name="full" title="maximize the info window" data-lat="" data-lng="">&#9633;</button></li>
-                        <li><button name="half" title="set info window to half size" data-lat="" data-lng="">&lrtri;</button></li>
-                        <li><button name="quarter" title="set info window to a quarter size" data-lat="" data-lng="">&mdash;</button></li>
-                        <li><button name="closed" title="close the info window" data-lat="" data-lng="">&times;</button></li>
-                    </ul>
-                </nav>
-                
-                <main></main>`;
+
+            L.DomUtil.create('hr', '', this._div);
+            //L.DomEvent.on(hr, 'click', this.toggleSize, this);
+
+            // TO FIX: turned off navbar construction for now because of the 
+            // conflict between touch and click events.
+
+            // this._div.innerHTML = `
+            //     <nav>
+            //         <ul class="right">
+            //             <li><button name="full" title="maximize the info window" data-lat="" data-lng="">&#9633;</button></li>
+            //             <li><button name="half" title="set info window to half size" data-lat="" data-lng="">&lrtri;</button></li>
+            //             <li><button name="quarter" title="set info window to a quarter size" data-lat="" data-lng="">&mdash;</button></li>
+            //             <li><button name="closed" title="close the info window" data-lat="" data-lng="">&times;</button></li>
+            //         </ul>
+            //     </nav>`;
+            //this._div.innerHTML += '<main></main>';
+            L.DomUtil.create('main', '', this._div);
         }
 
         // Note: We return 'this._div' here, not 'this'
@@ -98,20 +121,10 @@ const Slidebar = L.Control.extend({
     },
 
     onRemove: function(map) {
+
+        // nothing to be done
         return this;
     },
-
-    // open: function(map) {
-
-    //     // Open sidebar if it's closed
-    //     if (L.DomUtil.hasClass(this._div, 'closed')) {
-    //         this.fire('opening');
-    //         L.DomUtil.removeClass(this._div, 'closed');
-    //         L.DomUtil.addClass(this._div, 'full');
-    //     }
-
-    //     return this;
-    // },
 
 /*
        ◀──────────  x   ─────────▶                                                                                                 max_x,
@@ -170,21 +183,23 @@ const Slidebar = L.Control.extend({
     },
 
     update: async function({ content, latlng }) {
+        
         //this._div.innerHTML = content;
         const main = this._div.querySelector('#leaflet-slidebar main');
         main.innerHTML = content;
+        this._newCenter = latlng;
 
         if (this._size === 'closed') {
             this.toggleSize('full');
         }
-        
-        this.reCenter(latlng);
 
-        const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
-        buttons.forEach((button) => {
-            button.dataset.lat = latlng.lat;
-            button.dataset.lng = latlng.lng;
-        });
+        this.reCenter(this._newCenter);
+        
+        // const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
+        // buttons.forEach((button) => {
+        //     button.dataset.lat = latlng.lat;
+        //     button.dataset.lng = latlng.lng;
+        // });
 
         return this;
     },
@@ -201,12 +216,7 @@ const Slidebar = L.Control.extend({
         this._container = this.onAdd(map);
 
         L.DomUtil.addClass(this._container, 'leaflet-slidebar');
-        //L.DomUtil.addClass(this._container, 'open');
-
-        
-        // const sb = document.querySelector('#leaflet-slidebar');
-        // sb.style.setProperty('--slidebar-height', document.body.clientHeight);
-
+ 
         if (L.Browser.touch) {
             L.DomUtil.addClass(this._container, 'leaflet-touch');
         }
@@ -235,23 +245,21 @@ const Slidebar = L.Control.extend({
             this
         );
 
-        //this._updateContent();
-
         // insert as first child of map container (important for css)
         map._container.insertBefore(this._container, map._container.firstChild);
 
-        const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
-        const that = this;
-        buttons.forEach((button) => {
-            button.addEventListener('click', function fn(e) {
-                that.toggleSize(button.name);
-                const latlng = new L.LatLng(
-                    Number(button.dataset.lat), 
-                    Number(button.dataset.lng)
-                );
-                that.reCenter(latlng);
-            });
-        });
+        // const buttons = document.querySelectorAll('#leaflet-slidebar ul.right button');
+        // const that = this;
+        // buttons.forEach((button) => {
+        //     button.addEventListener('click', function fn(e) {
+        //         that.toggleSize(button.name);
+        //         const latlng = new L.LatLng(
+        //             Number(button.dataset.lat), 
+        //             Number(button.dataset.lng)
+        //         );
+        //         that.reCenter(latlng);
+        //     });
+        // });
 
         return this;
     },
