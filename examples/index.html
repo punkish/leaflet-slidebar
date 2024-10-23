@@ -28,6 +28,12 @@ html, body, #map {
     height: 100%;
     font: sans-serif;
 }
+figure div.img {
+    width: 100%;
+    height: 300px;
+    background-color: green;
+    text-align: center;
+}
     </style>
 </head>
 <body>
@@ -37,18 +43,25 @@ html, body, #map {
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" 
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
         crossorigin=""></script>
-    
-    <!-- <script src="../src/leaflet.slidebar.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chance@1.1.12/chance.min.js"></script>
     <script type="module">
         import { Slidebar } from '../src/leaflet.slidebar.js';
 
         // create the sidebar instance and add it to the map
         const slidebar = new Slidebar({
-            //content: '<i>Click on a marker for more info</i>',
+
+            // Default content for the slidebar in case its intiail state is not
+            // 'closed'
+            content: '<i>Click on a marker for more info</i>',
+
+            // Initial state of the slidebar (refers to its size) -- can be 
+            // one of 'closed', 'quarter', 'half', 'full'
+            // Defaults to 'full'.
+            // Note: 'full' is 3/4 of vertical height of the browser window
             state: 'closed'
         });
 
+        // Create a random map center
         const center = chance.coordinates({fixed: 2})
             .split(',')
             .map(c => c.trim() && Number(c));
@@ -92,6 +105,8 @@ html, body, #map {
         };
 
         for (let i = 0; i < numOfMarkers; i++) {
+
+            // Create random lat, lng pairs
             const lat = chance.latitude({
                 min: center[0] - 2, 
                 max: center[0] + 2, 
@@ -105,13 +120,12 @@ html, body, #map {
             });
 
             const latlng = new L.LatLng(lat, lng);
-
             const title = chance.sentence({ words: 5 });
-            const desc = chance.sentence({ words: 15 });
+            const desc = chance.sentence({ words: 65 });
             const content = `
             <h3>${title}</h3>
             <figure>
-                <div class="img">img</div>
+                <img src="https://picsum.photos/300"
                 <figcaption><p>${desc}</p></figcaption>
             </figure>`;
 
