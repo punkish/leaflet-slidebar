@@ -89,12 +89,16 @@
     max-height: var(--main-height);
     overflow-y: auto;
     margin-top: 5px;
+    -webkit-overflow-scrolling: touch;
 }
 #leaflet-slidebar main::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
+    -webkit-appearance: none;
     border-bottom: 1px solid #eee; 
     border-top: 1px solid #eee;
+}
+#leaflet-slidebar main::-webkit-scrollbar:vertical {
+    -webkit-appearance: none;
+    width: 15px;
 }
 #leaflet-slidebar main::-webkit-scrollbar-thumb {
     border-radius: 8px;

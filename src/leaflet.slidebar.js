@@ -36,6 +36,7 @@ const Slidebar = L.Control.extend({
             }
 
             this.toggleSize(targetSize);
+            L.DomEvent.stopPropagation(evt);
         });
 
         this.on('swipedown', function(evt) {
@@ -59,6 +60,7 @@ const Slidebar = L.Control.extend({
             }
 
             this.toggleSize(targetSize);
+            L.DomEvent.stopPropagation(evt);
         });
 
         return this;
@@ -228,14 +230,16 @@ const Slidebar = L.Control.extend({
         }
         
         // when adding to the map container, we should stop event propagation
+        // otherwise the map will respond when the user scrolls or interacts 
+        // with the slidebar
         L.DomEvent.disableScrollPropagation(this._container);
         L.DomEvent.disableClickPropagation(this._container);
-
-        L.DomEvent.on(
-            this._container, 
-            'contextmenu', 
-            L.DomEvent.stopPropagation
-        );
+        
+        // L.DomEvent.on(
+        //     this._container, 
+        //     'contextmenu', 
+        //     L.DomEvent.stopPropagation
+        // );
 
         L.DomEvent.on(
             this._container, 
@@ -249,6 +253,18 @@ const Slidebar = L.Control.extend({
             'touchend', 
             this._endSwipe, 
             this
+        );
+
+        L.DomEvent.on(
+            this._container, 
+            'touchstart', 
+            L.DomEvent.stopPropagation
+        );
+
+        L.DomEvent.on(
+            this._container, 
+            'touchend', 
+            L.DomEvent.stopPropagation
         );
 
         // insert as first child of map container (important for css)
@@ -282,7 +298,6 @@ const Slidebar = L.Control.extend({
         }
 
         this._startPoint = this._map.mouseEventToContainerPoint(touch);
-        L.DomEvent.preventDefault(evt);
     },
     
     _endSwipe: function(evt) {
