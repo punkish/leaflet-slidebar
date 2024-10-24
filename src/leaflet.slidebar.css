@@ -1,6 +1,11 @@
 #leaflet-slidebar {
     box-sizing: border-box;
     --slidebar-height: 100vh;
+    --slidebar-quarter-height: calc(var(--slidebar-height) * 0.25);
+    --slidebar-half-height: calc(var(--slidebar-height) * 0.5);
+    --slidebar-full-height: calc(var(--slidebar-height) * 0.75);
+    --nav-button-dim: 26px;
+    --nav-height: calc(var(--nav-button-dim) + 2px);
     background-color: white;
     opacity: 1;
     border-radius: 20px 20px 0 0;
@@ -17,48 +22,55 @@
     padding: 0;
 }
 #leaflet-slidebar.quarter {
-    height: calc( var(--slidebar-height) * 0.25);
+    height: var(--slidebar-quarter-height);
 }
 #leaflet-slidebar.half {
-    height: calc( var(--slidebar-height) * 0.5);
+    height: var(--slidebar-half-height);
 }
 #leaflet-slidebar.full {
-    height: calc( var(--slidebar-height) * 0.75);
+    height: var(--slidebar-full-height);
 }
 #leaflet-slidebar nav {
     border: none;
-    height: 20px;
+    height: var(--nav-height);
     padding: 0;
 }
 #leaflet-slidebar nav hr {
+    --hr-width: 50px;
+    --hr-margin-top: calc(var(--nav-height) / 2);
+    --hr-margin-left: calc(50% - calc(var(--hr-width) / 2));
+    --hr-margin-right: calc(50% - calc(var(--hr-width) / 2) - var(--nav-button-dim));
     border: 0;
     height: 1px;
+    width: var(--hr-width);
+    float: left;
+    margin: var(--hr-margin-top) var(--hr-margin-right) 0 var(--hr-margin-left);
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
 #leaflet-slidebar nav button {
-    --button-dim: 16px;
     border: 1px solid green;
     float: right;
-    height: var(--button-dim);
-    width: var(--button-dim);
-    border-radius: var(--button-dim);
+    height: var(--nav-button-dim);
+    width: var(--nav-button-dim);
+    border-radius: var(--nav-button-dim);
 }
-.close-btn:before,
-.close-btn:after {
+#leaflet-slidebar nav button:before,
+#leaflet-slidebar nav button:after {
+    --criss-cross-width: calc(var(--nav-button-dim) / 2);
     position: absolute;
-    width: 14px;
+    width: var(--criss-cross-width);
     height: 1px;
-    margin-left: -7px;
+    margin-left: calc( -1 * var(--criss-cross-width) / 2);
     content: '';
     background: #8a9199;
     transition: all ease 1s;
 }
-.close-btn:before {
+#leaflet-slidebar nav button:before {
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
-.close-btn:after {
+#leaflet-slidebar nav button:after {
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
 }
@@ -68,20 +80,38 @@
     background: rgba(242, 106, 61, 0.1);
 }
 #leaflet-slidebar main {
+    --main-height: calc(var(--slidebar-full-height) - var(--nav-height));
+    flex: unset;
+    flex-flow: unset;
+    height: unset;
     padding: 0 10px;
+    height: var(--main-height);
+    max-height: var(--main-height);
     overflow-y: auto;
+    margin-top: 5px;
+}
+#leaflet-slidebar main::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+    border-bottom: 1px solid #eee; 
+    border-top: 1px solid #eee;
+}
+#leaflet-slidebar main::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #C3C3C3;
+    border: 2px solid #eee;
+}
+#leaflet-slidebar main::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
 }
 #leaflet-slidebar main figure {
-    border: 0px solid red;
     width: 100%;
     margin: 0;
     padding: 0;
 }
-#leaflet-slidebar hr {
-    width: 50px;
-    margin: 0 auto;
+#leaflet-slidebar main figure img {
+    width: 100%;
 }
-
 /* Larger than mobile */
 @media only screen and (min-width: 400px) {
     #leaflet-slidebar {

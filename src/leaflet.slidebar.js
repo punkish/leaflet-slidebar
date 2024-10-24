@@ -90,15 +90,21 @@ const Slidebar = L.Control.extend({
             this._div.id = 'leaflet-slidebar';
             this._size = this.options.state;
 
-            const nav = L.DomUtil.create('nav', '', this._div);
-            const hr = L.DomUtil.create('hr', '', nav);
+            const navClass = '';
+            const nav = L.DomUtil.create('nav', navClass, this._div);
+
+            const hrClass = '';
+            const hr = L.DomUtil.create('hr', hrClass, nav);
             // L.DomEvent.on(hr, 'click', this.toggleSize, this);
 
-            const closeBtn = L.DomUtil.create('button', 'close-btn', nav);
+            const btnClass = '';
+            const closeBtn = L.DomUtil.create('button', btnClass, nav);
             const toggleClose = (e) => this.toggleSize('closed');
             L.DomEvent.on(closeBtn, 'click', toggleClose, this);
             L.DomEvent.on(closeBtn, 'touchend', toggleClose, this);
-            L.DomUtil.create('main', '', this._div);
+
+            const mainClass = '';
+            L.DomUtil.create('main', mainClass, this._div);
         }
 
         // Note: We return 'this._div' here, not 'this'
