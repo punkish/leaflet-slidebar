@@ -108,14 +108,7 @@
 #leaflet-slidebar main::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
 }
-#leaflet-slidebar main figure {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-#leaflet-slidebar main figure img {
-    width: 100%;
-}
+
 /* Larger than mobile */
 @media only screen and (min-width: 400px) {
     #leaflet-slidebar {
